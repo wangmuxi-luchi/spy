@@ -1,4 +1,4 @@
-mycode=r'''
+mycode1=r'''
 
 # coding=utf-8
 import threading
@@ -8,8 +8,12 @@ import os
 import sys
 
 start_time=time()
+
+'''
+
+
+mycode2=r'''
 maxthread=10            #最大线程数
-run_timeout=60         #最长运行时间
 lock=threading.Lock()   #线程锁
 thread_count=0          #正在运行的线程数
 exitFlag = 0
@@ -153,7 +157,7 @@ def download_pic(threadName):
             jpgurl=oldurl[1][oldurl[0].index(pic_name)]
             print(threadName+'：链接已存在    链接:%s'%(jpgurl))
             mywrite_line('run_logs.txt',threadName+'：链接已存在    链接:%s'%(jpgurl))
-
+        mywrite_line(pic_name[:-3]+'txt',jpgurl,'w')
         print(threadName+'：开始下载图片%s   链接：%s'%(pic_name,jpgurl))
         mywrite_line('run_logs.txt',threadName+'：开始下载图片%s   链接：%s'%(pic_name,jpgurl))
 
@@ -162,7 +166,7 @@ def download_pic(threadName):
 
         print(threadName+':图片下载完成，url:'+jpgurl+'，用时%f'%(start3-start1))
         mywrite_line('run_logs.txt',threadName+':图片下载完成，url:'+jpgurl+'，用时%f'%(start3-start1))
-
+        os.system('del '+pic_name[:-3]+'txt')
         jpg_page=get_jpgpage()
 class myThread (threading.Thread):
     def __init__(self, threadID, name):
@@ -214,6 +218,8 @@ timeout_flag=0
 while timeout_flag<run_timeout and thread_count>0:
     sleep(1)
     timeout_flag+=1
+    if timeout_flag%60==0:
+        print('剩余%d个线程，已运行%f秒'%(thread_count,time()-start_time))
 if(timeout_flag>=run_timeout):
     mywrite_line('timeout.txt','剩余线程：%d'%thread_count)
     mywrite_line('run_logs.txt','运行超时，剩余线程：%d'%thread_count)
@@ -221,6 +227,10 @@ if(timeout_flag>=run_timeout):
 mywrite_line('run_logs.txt',"退出主线程"+'\n总用时%f'%(time()-start_time))
 print("退出主线程")
 print('总用时%f'%(time()-start_time))
+
+
+
+
 
 '''
 
@@ -237,3 +247,11 @@ python code.py
 del code.py
 exit
 '''
+
+
+def get_mycode(run_time=90):
+    return(mycode1+'run_timeout=%d         #最长运行时间'%run_time+mycode2)
+
+
+# with open('testcode.py','w',encoding='utf-8') as file:
+#     file.write(get_mycode(6000))

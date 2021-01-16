@@ -58,7 +58,7 @@ def get_content(url):#获取网页源码
         starttime=time.time()
         try:
             
-            html=s.get(url=url,timeout=60)
+            html=s.get(url=url)
 
             return html.text,html.content
         except:
